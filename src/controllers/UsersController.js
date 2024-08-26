@@ -37,10 +37,10 @@ class UsersController {
 
     async update(request, response) {
         const { name, email, password, old_password } = request.body;
-        const { id } = request.params;
+        const user_id = request.user.id;
 
         const database = await sqliteConnection(); //mudo o nome para ASYNC para conseguir receber await dentro da classe
-        const user = await database.get("SELECT * FROM users WHERE id = (?)", [id]);
+        const user = await database.get("SELECT * FROM users WHERE id = (?)", [user_id]);
 
         if(!user) {
             throw new AppError("Usuário não encontrado");
@@ -48,11 +48,11 @@ class UsersController {
 
         const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email]);
 
-        if(userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) { //esta verificando o email do usuario 
+        if(userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) { //esta verificando o email do usuário 
             throw new AppError("Este email já esta em uso");
         }
 
-        user.name = name ?? user.name; //?? significa q ou e o nome que ja esta ou o novo nome que vai ser atribuido
+        user.name = name ?? user.name; //?? significa q ou e o nome que ja esta ou o novo nome que vai ser atribuído
         user.email = email ?? user.email;
 
         if (password && !old_password) {
@@ -76,7 +76,7 @@ class UsersController {
             password = ?,
             updated_at = DATETIME('now')
             WHERE id = ?`, 
-            [user.name, user.email, user.password, id]
+            [user.name, user.email, user.password, user_id]
         );
 
         return response.json();
