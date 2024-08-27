@@ -1,17 +1,18 @@
 require("express-async-errors"); //usando middleware para tratar erros async
-
 const migrationsRun = require("./database/sqlite/migrations");
-
 const AppError = require("./utils/AppError"); //importando classe de erros
-
 const express = require("express");
-
 const routes = require("./routes"); //importando rotas
+const uploadConfig = require("./configs/upload");
+
+
 migrationsRun();
 
 
 const app = express(); //inciando o express
 app.use(express.json()); //usando middleware para tratar corpo das requisicoes
+
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
 
 app.use(routes); //rota principal
 
