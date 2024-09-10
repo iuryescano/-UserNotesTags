@@ -5,11 +5,13 @@ const express = require("express");
 const routes = require("./routes"); //importando rotas
 const uploadConfig = require("./configs/upload");
 
+const cors = require("cors");
 
 migrationsRun();
 
 
 const app = express(); //inciando o express
+app.use(cors());
 app.use(express.json()); //usando middleware para tratar corpo das requisicoes
 
 app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
