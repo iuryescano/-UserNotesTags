@@ -1,4 +1,6 @@
 require("express-async-errors"); //usando middleware para tratar erros async
+require("dotenv/config"); //para ter acesso as variaveis de ambiente
+
 const migrationsRun = require("./database/sqlite/migrations");
 const AppError = require("./utils/AppError"); //importando classe de erros
 const express = require("express");
@@ -36,5 +38,5 @@ app.use(( error, request, response, next ) => { //middleware para tratar erros g
 
 });
 
-const PORT = 3333;  //porta onde o server vai rodar
+const PORT = process.env.PORT || 3333;  //porta onde o server vai rodar
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`)); 
